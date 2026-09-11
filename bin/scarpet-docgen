@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+import {resolve, join} from 'node:path';
+import {generate} from '../lib/docgen.js';
+
+const USAGE = `Usage: scarpet-docgen <input-dir> [--out <dir>]
+
+Generate markdown documentation for Scarpet scripts.
+
+Arguments:
+  <input-dir>    Directory containing Scarpet scripts (.sc or .scl).
+  --out <dir>    Output directory (default: <input-dir>/docs).
+  --help         Show this help.
+`;
+
+function printUsage() {
+    console.log(USAGE.trimEnd());
+}
+
+const args = process.argv.slice(2);
+const positional = /** @type {string[]} */ ([]);
+let out = undefined;
+for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === '--help' || arg === '-h') {
+        printUsage();
+        process.exit(0);
+    } else if (arg === '--out' || arg === '-o') {
+        if (i + 1 >= args.length) {
+            console.error('Error: --out requires a directory argument.');
+            printUsage();
+            process.exit(1);
+        }
+        out = args[++i];
+    } else if (arg.startsWith('-')) {
+        console.error(`Error: unknown option "${arg}".`);
+        printUsage();
+        process.exit(1);
+    } else {
+        positional.push(arg);
+    }
+}
+
+if (positional.length === 0) {
+    printUsage();
+    process.exit(1);
+}
+
+const inputDir = resolve(positional[0]);
+const outDir = out !== undefined ? resolve(out) : join(inputDir, 'docs');
+
+try {
+    await generate(inputDir, outDir);
+    console.log(`Scarpet docs generated.\n  in:  ${inputDir}\n  out: ${outDir}`);
+} catch (error) {
+    console.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
+}

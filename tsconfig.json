@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "NodeNext",
+    "allowJs": true,
+    "checkJs": true,
+    "lib": [
+      "ES2016",
+      "ES2020.BigInt"
+    ],
+    "noEmit": true,
+    "moduleResolution": "NodeNext",
+    "rootDir": "lib",
+    "stripInternal": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitThis": true,
+    "useUnknownInCatchVariables": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true,
+  },
+  "include": ["lib"]
+}
