@@ -49,8 +49,11 @@ const inputDir = resolve(positional[0]);
 const outDir = out !== undefined ? resolve(out) : join(inputDir, 'docs');
 
 try {
-    await generate(inputDir, outDir);
-    console.log(`Scarpet docs generated.\n  in:  ${inputDir}\n  out: ${outDir}`);
+    const result = await generate(inputDir, outDir);
+    console.log(`Scarpet docs saved in ${result.outDir}`);
+    for (const file of result.files) {
+        console.log(`  ${file}`);
+    }
 } catch (error) {
     console.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
     process.exit(1);
